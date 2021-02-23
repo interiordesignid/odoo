@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- <record id="custom_product_template_form_view" model="ir.ui.view">
+			<field name="name">custom.product.template.common.form</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='categ_id']" position="after">
+					<field name="brand_id" string="Brand"/>
+				</xpath>
+			</field>
+		</record> -->
+
+		<record id="custom_product_category_form_view" model="ir.ui.view">
+			<field name="name">custom.product.category.form</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="product.product_category_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='first']" position="after">
+					<group>
+                        <field name="attributes" class="oe_inline">
+							<tree editable="bottom" create="1" delete="1">
+								<field name="attribute"/>
+							</tree>
+						</field>
+                    </group>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="custom_product_normal_form_view" model="ir.ui.view">
+			<field name="name">custom.product.product.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view"/>
+			<field name="arch" type="xml">
+				<field name="categ_id" position="replace">
+					<field name="sku" string="SKU"/>
+					<field name="categ_id" string="Category"/>
+                    <field name="brand_id" string="Brand"/>
+                </field>
+
+                <xpath expr="//page[@name='general_information']" position="after">
+                	<page string="3D Models" name="3d_models">
+						<group>
+	                        <field name="three_d_models" class="oe_inline">
+	                        	<form>
+	                        		<group>
+										<field name="name"/>
+										<field name="model" filename="model_name"/>
+										<field name="model_name" invisible="1"/>
+									</group>
+								</form>
+								<tree create="1" delete="1">
+									<field name="name"/>
+									<field name="model_name"/>
+								</tree>
+							</field>
+	                    </group>
+                   	</page>
+				</xpath>
+
+				<xpath expr="//page[@name='general_information']" position="after">
+                	<page string="Attributes" name="attributes">
+						<group>
+	                        <field name="attributes">
+								<tree editable="bottom" create="1" delete="1">
+									<field name="name"/>
+									<field name="value" string=" "/>
+								</tree>
+							</field>
+	                    </group>
+                   	</page>
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_brand_form_view">
+			<field name="name">product.brand.form.view</field>
+			<field name="model">product.brand</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Brands" version="11.0">
+					<sheet>
+						<group string="Brand">
+							<field name="name" class="oe_inline"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="product_brand_tree_view">
+			<field name="name">product.brand.tree.view</field>
+			<field name="model">product.brand</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Brands">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="product_brand_search">
+			<field name="name">product.brand.search</field>
+			<field name="model">product.brand</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Pencarian Brands">
+					<field name="name"/>
+				</search>
+			</field>
+		</record>
+		
+		<record id="product_brand_action" model="ir.actions.act_window">
+			<field name="name">Brands</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.brand</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="search_view_id" ref="product_brand_search" />
+			<field name="context">{}</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Di sini anda dapat menambahkan, merubah, dan menghapus Brands.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="product_brand_tree_action_view">
+			<field eval="1" name="sequence"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="product_brand_tree_view"/>
+			<field name="act_window_id" ref="product_brand_action"/>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="product_brand_form_action_view">
+			<field eval="2" name="sequence"/>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="product_brand_form_view"/>
+			<field name="act_window_id" ref="product_brand_action"/>
+		</record>
+
+		<menuitem id="product_brand_action_menu" action="product_brand_action" sequence="10" parent="sale.product_menu_catalog"/>
+
+	    <record id="ast_id_project_product_search" model="ir.actions.act_url">
+                <field name="name">Product Search</field>
+                <field name="type">ir.actions.act_url</field>
+                <field name="target">new</field>
+                <field name="url">http://192.168.233.219:8080/</field>
+        </record>
+
+	    <menuitem name="Product Search"
+	    	action="ast_id_project_product_search"
+	        id="ast_id_project_product_search_menu"
+	        parent="sale.product_menu_catalog"
+	        sequence="5"/>
+
+		<record id="custom_product_search_form_view" model="ir.ui.view">
+			<field name="name">product.product.search</field>
+            <field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_search_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//search" position="inside">
+					<field name="search_attributes" string="Custom Attributes"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
