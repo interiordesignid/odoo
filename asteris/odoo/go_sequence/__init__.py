@@ -1,0 +1,1 @@
+from . import go_sequence

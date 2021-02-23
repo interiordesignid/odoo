@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="ast_monotaro_fetcher_form_view">
+			<field name="name">ast.monotaro.fetcher.form.view</field>
+			<field name="model">ast.monotaro.fetcher</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Monotaro.id Data Fetcher" version="7.0">
+					<header>
+                        <button name="set_ongoing" string="Fetch Data" type="object" class="oe_highlight" states="draft"/>
+                        <button name="set_draft" string="Set Draft" type="object" states="ongoing,planned,fetched,imported,cancelled" confirm="Are you sure you want to set this to draft? (All of the fetched data will be erased)"/>
+                        <button name="retry_fetch" string="Retry Fetch" type="object" states="ongoing,planned,fetched,imported,cancelled" confirm="Are you sure you want to retry? (All of the fetched data will be erased)"/>
+                        <button name="cancel" string="Cancel" type="object" states="draft,ongoing,planned,fetched,imported" confirm="Are you sure you want to cancel this? (All of the fetched data will be erased)"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,ongoing,planned,fetched,imported,cancelled"/>
+                    </header>
+					<sheet>
+						<group>
+							<field name="name" class="oe_inline"/>
+							<field name="date" attrs="{'readonly': [('state','!=','draft')]}" class="oe_inline"/>
+							<!-- <field name="debug_text" class="oe_inline"/> -->
+							<field name="categories" attrs="{'readonly': [('state','!=','draft')]}">
+								<tree editable="bottom" create="1" delete="1">
+									<field name="name"/>
+								</tree>
+							</field>
+							<field name="fetched_categories">
+								<tree editable="bottom" create="1" delete="1">
+									<field name="name"/>
+									<field name="category"/>
+									<field name="number_of_page"/>
+									<field name="state"/>
+								</tree>
+							</field>	
+							<field name="records" nolabel="1" colspan="2" readonly="1">
+								<tree>
+									<field name="image" widget="image" height="200px"/>
+									<field name="name"/>
+									<field name="sku"/>
+									<field name="category"/>
+									<field name="brand"/>
+									<field name="price"/>
+								</tree>
+								<form>
+									<group>
+										<field name="image" string="" widget="image" class="oe_avatar"/>
+										<field name="name" class="oe_online"/>
+										<field name="sku" class="oe_online"/>
+										<field name="category" class="oe_online"/>
+										<field name="brand" class="oe_online"/>
+										<field name="attributes" class="oe_online">
+											<tree editable="bottom">
+												<field name="name"/>
+												<field name="value"/>
+											</tree>
+										</field>
+										<field name="description" class="oe_online"/>
+										<field name="price" class="oe_online"/>
+									</group>
+								</form>
+							</field>	
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="ast_monotaro_fetcher_tree_view">
+			<field name="name">ast.monotaro.fetcher.tree.view</field>
+			<field name="model">ast.monotaro.fetcher</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Monotaro.id Data Fetcher">
+					<field name="name"/>
+					<field name="date"/>
+					<field name="categories"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="ast_monotaro_fetcher_filter" model="ir.ui.view">
+            <field name="name">ast.monotaro.fetcher.select</field>
+            <field name="model">ast.monotaro.fetcher</field>
+            <field name="arch" type="xml">
+                <search string="Pencarian Monotaro.id Data Fetcher">
+					<field name="name"/>
+					<field name="date"/>
+					<field name="categories"/>
+					<field name="state"/>
+					<group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by':'state'}"/>
+                    </group>
+				</search>
+            </field>
+        </record>
+		
+		<record id="ast_monotaro_fetcher_action" model="ir.actions.act_window">
+			<field name="name">Monotaro.id Data Fetcher</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ast.monotaro.fetcher</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="search_view_id" ref="ast_monotaro_fetcher_filter"/>
+			<field name="context">{}</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Di sini anda dapat menambahkan, merubah, dan menghapus Monotaro.id Data Fetcher.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="ast_monotaro_fetcher_tree_action_view">
+			<field eval="1" name="sequence"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="ast_monotaro.ast_monotaro_fetcher_tree_view"/>
+			<field name="act_window_id" ref="ast_monotaro.ast_monotaro_fetcher_action"/>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="ast_monotaro_fetcher_form_action_view">
+			<field eval="2" name="sequence"/>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="ast_monotaro.ast_monotaro_fetcher_form_view"/>
+			<field name="act_window_id" ref="ast_monotaro.ast_monotaro_fetcher_action"/>
+		</record>
+		
+		<menuitem action="ast_monotaro_fetcher_action" icon="STOCK_JUSTIFY_FILL" sequence="1"
+		    id="ast_monotaro_fetcher_action_menu"  parent="ast_monotaro.menu_monotaro_fetcher"
+		/>
+
+		<record model="ir.ui.view" id="ast_monotaro_fetcher_category_form_view">
+			<field name="name">ast.monotaro.fetcher.record.category.form.view</field>
+			<field name="model">ast.monotaro.fetcher.record.category</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Categories" version="11.0">
+					<header>
+						<button name="action_pre_import_products" string="Import" type="object" class="oe_highlight" states="unimported"/>
+						<button name="rollback_products" string="Rollback" type="object" states="imported" confirm="Are you sure you want to rollback the imported products?"/>
+						<field name="state" widget="statusbar" statusbar_visible="unimported,imported"/>
+					</header>
+					<sheet>
+						<group string="Category">
+							<field name="code" class="oe_inline"/>
+							<field name="name" class="oe_inline"/>
+							<field name="records" class="oe_inline">
+								<tree>
+									<field name="sku"/>
+									<field name="name"/>
+									<field name="price"/>
+								</tree>
+							</field>
+							<field name="import_to" class="oe_inline" states="imported"/>
+							<field name="imported_products" class="oe_inline"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="ast_monotaro_fetcher_category_tree_view">
+			<field name="name">ast.monotaro.fetcher.record.category.tree.view</field>
+			<field name="model">ast.monotaro.fetcher.record.category</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Categories">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="ast_monotaro_fetcher_category_search">
+			<field name="name">ast.monotaro.fetcher.record.category.search</field>
+			<field name="model">ast.monotaro.fetcher.record.category</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Pencarian Categories">
+					<field name="name"/>
+				</search>
+			</field>
+		</record>
+		
+		<record id="ast_monotaro_fetcher_category_action" model="ir.actions.act_window">
+			<field name="name">Categories</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ast.monotaro.fetcher.record.category</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="search_view_id" ref="ast_monotaro_fetcher_category_search" />
+			<field name="context">{}</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Di sini anda dapat menambahkan, merubah, dan menghapus Categories.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="ast_monotaro_fetcher_category_tree_action_view">
+			<field eval="1" name="sequence"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="ast_monotaro_fetcher_category_tree_view"/>
+			<field name="act_window_id" ref="ast_monotaro_fetcher_category_action"/>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="ast_monotaro_fetcher_category_form_action_view">
+			<field eval="2" name="sequence"/>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="ast_monotaro_fetcher_category_form_view"/>
+			<field name="act_window_id" ref="ast_monotaro_fetcher_category_action"/>
+		</record>
+
+		<menuitem id="ast_monotaro_fetcher_category_action_menu" action="ast_monotaro_fetcher_category_action" sequence="10" parent="ast_monotaro.menu_monotaro_fetcher"/>
+
+		<record id="monotaro_import_form_wizard" model="ir.ui.view">
+            <field name="name">ast.monotaro.fetcher.record.category.form.wizard</field>
+            <field name="model">ast.monotaro.fetcher.record.category</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Task" class="o_form_project_tasks">
+                    <div class="oe_title">
+                        Choose which category these records will be imported to
+                    </div>
+                    <group>
+                        <group>
+                            <field name="import_to"/>
+                        </group>
+                    </group>
+                    <footer>
+						<button name="import_products" string="Import Records" class="oe_highlight" type="object"/>
+					</footer>
+                </form>
+            </field>
+        </record>
+	</data>
+</odoo>

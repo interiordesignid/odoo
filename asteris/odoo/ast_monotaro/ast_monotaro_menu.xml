@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	    <menuitem name="Monotaro.id Fetcher"
+	        id="menu_monotaro"
+	        web_icon="ast_monotaro,static/src/img/logo.png"
+	        sequence="1"/>
+
+	        <menuitem id="menu_monotaro_fetcher" name="Tools" parent="menu_monotaro" sequence="20"/>
+    </data>
+</openerp>
