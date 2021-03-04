@@ -9,7 +9,7 @@
                 <xpath expr="//field[@name='payment_term_id']" position="after">                	
 					<field name="category_id"/>
 					<field name="project_task_id" attrs="{'invisible': [('project_task_id', '=', False)]}"/>
-				</xpath>1
+				</xpath>
 				<xpath expr="//button[@name='action_draft']" position="after">                	
 					<button name="action_create_project" string="Start an Project" type="object" attrs="{'invisible': ['|',('project_task_id', '!=', False),('category_id', '=', False)]}" class="oe_highlight" groups="sales_team.group_sale_manager"/>
 				</xpath>
@@ -39,6 +39,12 @@
 							<field name="name" class="oe_inline"/>
 							<field name="default_project_id" class="oe_inline"/>
 							<field name="default_stage_id" class="oe_inline"/>
+							<!-- <field name="stages" class="oe_inline">
+								<tree editable="bottom" create="1" delete="1">
+									<field name="sequence" string="#"/>
+									<field name="project_task_type_id" string="Stage"/>
+								</tree>
+							</field> -->
 						</group>
 					</sheet>
 				</form>
@@ -97,6 +103,98 @@
 		</record>
 
 		<menuitem name="Order Categories" id="sale_order_category_action_menu" action="sale_order_category_action" sequence="20" parent="sale.product_menu_catalog"/>
+
+		<!-- <record model="ir.ui.view" id="project_default_configuration_form_view">
+			<field name="name">project.default.configuration.form.view</field>
+			<field name="model">project.default.configuration</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Project Default Configurations" version="11.0">
+					<sheet>
+						<group string="Default Project Configuration">
+							<field name="default_project_id" class="oe_inline"/>
+							<field name="default_stage_id" class="oe_inline"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="project_default_configuration_tree_view">
+			<field name="name">project.default.configuration.tree.view</field>
+			<field name="model">project.default.configuration</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Project Default Configurations">
+					<field name="default_project_id"/>
+					<field name="default_stage_id"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="project_default_configuration_search">
+			<field name="name">project.default.configuration.search</field>
+			<field name="model">project.default.configuration</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Pencarian Project Default Configurations">
+					<field name="default_project_id"/>
+					<field name="default_stage_id"/>
+				</search>
+			</field>
+		</record>
+		
+		<record id="project_default_configuration_action" model="ir.actions.act_window">
+			<field name="name">Project Default Configuration</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.default.configuration</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="search_view_id" ref="project_default_configuration_search" />
+			<field name="context">{}</field>
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No data found
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="project_default_configuration_tree_action_view">
+			<field eval="1" name="sequence"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="project_default_configuration_tree_view"/>
+			<field name="act_window_id" ref="project_default_configuration_action"/>
+		</record>
+		
+		<record model="ir.actions.act_window.view" id="project_default_configuration_form_action_view">
+			<field eval="2" name="sequence"/>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="project_default_configuration_form_view"/>
+			<field name="act_window_id" ref="project_default_configuration_action"/>
+		</record>
+
+		<menuitem id="project_default_configuration_action_menu" action="project_default_configuration_action" sequence="20" parent="project.menu_project_config"/> -->
+
+		<record id="ast_id_project_task_action" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="context">{
+                'default_group_by': 'stage_id',
+                'search_default_project_id': [10],
+                'default_project_id': 10,
+            }</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Here, you can create new tasks
+                </p>
+                <p>
+                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                </p>
+            </field>
+        </record>
 
 		<menuitem name="Tasks"
 			action="ast_id_project_task_action"
