@@ -9,7 +9,7 @@ This module customizes Project module to suit Interior Design needs
     "website" : "https://asteris.id",
     'depends': ['base','sale','project'],
     'data': [
-        
+        'ast_id_project.xml',
     ],
     'application': True,
 }
