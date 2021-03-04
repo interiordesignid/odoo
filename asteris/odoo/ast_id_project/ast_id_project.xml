@@ -39,12 +39,6 @@
 							<field name="name" class="oe_inline"/>
 							<field name="default_project_id" class="oe_inline"/>
 							<field name="default_stage_id" class="oe_inline"/>
-							<!-- <field name="stages" class="oe_inline">
-								<tree editable="bottom" create="1" delete="1">
-									<field name="sequence" string="#"/>
-									<field name="project_task_type_id" string="Stage"/>
-								</tree>
-							</field> -->
 						</group>
 					</sheet>
 				</form>
@@ -104,78 +98,6 @@
 
 		<menuitem name="Order Categories" id="sale_order_category_action_menu" action="sale_order_category_action" sequence="20" parent="sale.product_menu_catalog"/>
 
-		<!-- <record model="ir.ui.view" id="project_default_configuration_form_view">
-			<field name="name">project.default.configuration.form.view</field>
-			<field name="model">project.default.configuration</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Project Default Configurations" version="11.0">
-					<sheet>
-						<group string="Default Project Configuration">
-							<field name="default_project_id" class="oe_inline"/>
-							<field name="default_stage_id" class="oe_inline"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
-		
-		<record model="ir.ui.view" id="project_default_configuration_tree_view">
-			<field name="name">project.default.configuration.tree.view</field>
-			<field name="model">project.default.configuration</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Project Default Configurations">
-					<field name="default_project_id"/>
-					<field name="default_stage_id"/>
-				</tree>
-			</field>
-		</record>
-		
-		<record model="ir.ui.view" id="project_default_configuration_search">
-			<field name="name">project.default.configuration.search</field>
-			<field name="model">project.default.configuration</field>
-			<field name="type">search</field>
-			<field name="arch" type="xml">
-				<search string="Pencarian Project Default Configurations">
-					<field name="default_project_id"/>
-					<field name="default_stage_id"/>
-				</search>
-			</field>
-		</record>
-		
-		<record id="project_default_configuration_action" model="ir.actions.act_window">
-			<field name="name">Project Default Configuration</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.default.configuration</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>			
-			<field name="search_view_id" ref="project_default_configuration_search" />
-			<field name="context">{}</field>
-			<field name="domain">[]</field>
-			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">
-					No data found
-				</p>
-			</field>
-		</record>
-		
-		<record model="ir.actions.act_window.view" id="project_default_configuration_tree_action_view">
-			<field eval="1" name="sequence"/>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="project_default_configuration_tree_view"/>
-			<field name="act_window_id" ref="project_default_configuration_action"/>
-		</record>
-		
-		<record model="ir.actions.act_window.view" id="project_default_configuration_form_action_view">
-			<field eval="2" name="sequence"/>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="project_default_configuration_form_view"/>
-			<field name="act_window_id" ref="project_default_configuration_action"/>
-		</record>
-
-		<menuitem id="project_default_configuration_action_menu" action="project_default_configuration_action" sequence="20" parent="project.menu_project_config"/> -->
-
 		<record id="ast_id_project_task_action" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
@@ -201,100 +123,5 @@
 	        id="ast_id_project_menu"
 	        web_icon="ast_id_project,static/src/img/task.png"
 	        sequence="1"/>
-
-	    <record id="view_task_form_wizard" model="ir.ui.view">
-            <field name="name">project.task.form.wizard</field>
-            <field name="model">project.task</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-            	<form string="Task" class="o_form_project_tasks">
-                    <header>
-                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : [('user_id', '!=', False)]}"/>
-                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
-                    </header>
-                    <sheet string="Task">
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
-                        <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('parent_id', '!=', False), ('id', '=', False)]}" context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" groups="project.group_subtask_project">
-                            <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
-                        </button>
-                        <button name="%(project.rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
-                            <field name="rating_count" string="Rating" widget="statinfo"/>
-                        </button>
-                    </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title pr-0">
-                        <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="mr-3"/>
-                            <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ml-auto"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="project_id" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
-                            <field name="active" invisible="1"/>
-                            <field name="user_id"
-                                class="o_task_user_field"
-                                options='{"no_open": True}'/>
-                            <field name="legend_blocked" invisible="1"/>
-                            <field name="legend_normal" invisible="1"/>
-                            <field name="legend_done" invisible="1"/>
-                            <field name="sale_id" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="date_deadline"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page name="description_page" string="Description">
-                            <field name="description" type="html"/>
-                            <div class="oe_clear"/>
-                        </page>
-                        <page name="extra_info" string="Extra Info">
-                            <group>
-                                <group>
-                                    <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id"/>
-                                    <field name="email_from" invisible="1"/>
-                                    <field name="email_cc" groups="base.group_no_one"/>
-                                    <field
-                                        name="parent_id"
-                                        domain="[('parent_id', '=', False)]"
-                                        attrs="{'invisible' : [('subtask_count', '>', 0)]}"
-                                        groups="project.group_subtask_project"
-                                    />
-                                    <field name="child_ids" invisible="1" />
-                                    <field name="subtask_project_id" invisible="1" />
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="displayed_image_id" groups="base.group_no_one"/>
-                                </group>
-                                <group>
-                                    <field name="date_assign" groups="base.group_no_one"/>
-                                    <field name="date_last_stage_update" groups="base.group_no_one"/>
-                                </group>
-                                <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
-                                    <field name="working_hours_open" string="Hours"/>
-                                    <field name="working_days_open" string="Days"/>
-                                </group>
-                                <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
-                                    <field name="working_hours_close" string="Hours"/>
-                                    <field name="working_days_close" string="Days"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
 	</data>
 </odoo>
